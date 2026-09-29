@@ -1,6 +1,7 @@
 package com.as.crichub.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,12 @@ public interface TournamentRegistrationRepository extends JpaRepository<Tourname
 	boolean existsByTournamentAndTeam(Tournament tournament, Team team);
 
 	boolean existsByTournamentTournamentIdAndTeamTeamId(Long tournamentId, Long teamId);
+
+	/** How many teams are registered for a tournament, for capacity checks. */
+	long countByTournamentTournamentId(Long tournamentId);
+
+	/** A single registration, scoped to its tournament, so unregister can't cross tournaments. */
+	Optional<TournamentRegistration> findByRegistrationIdAndTournamentTournamentId(Long registrationId,
+			Long tournamentId);
 
 }

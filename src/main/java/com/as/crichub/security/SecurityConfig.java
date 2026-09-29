@@ -42,8 +42,12 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/v3/api-docs/**")
             .permitAll()
+            // The REST API stays protected; everything else (the built SPA — its
+            // index.html, static assets and client-side routes) is served freely.
+            .requestMatchers("/api/**")
+            .authenticated()
             .anyRequest()
-            .authenticated())
+            .permitAll())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 
