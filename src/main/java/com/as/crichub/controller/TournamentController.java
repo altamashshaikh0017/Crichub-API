@@ -16,6 +16,7 @@ import com.as.crichub.dto.TournamentReq;
 import com.as.crichub.response.ResponseBean;
 import com.as.crichub.service.MatchService;
 import com.as.crichub.service.StandingsService;
+import com.as.crichub.service.StatsService;
 import com.as.crichub.service.TournamentService;
 
 import jakarta.validation.Valid;
@@ -29,12 +30,14 @@ public class TournamentController {
 	private final TournamentService tournamentService;
 	private final MatchService matchService;
 	private final StandingsService standingsService;
+	private final StatsService statsService;
 
 	public TournamentController(TournamentService tournamentService, MatchService matchService,
-			StandingsService standingsService) {
+			StandingsService standingsService, StatsService statsService) {
 		this.tournamentService = tournamentService;
 		this.matchService = matchService;
 		this.standingsService = standingsService;
+		this.statsService = statsService;
 	}
 
 	@GetMapping
@@ -101,5 +104,11 @@ public class TournamentController {
 	public ResponseEntity<ResponseBean> getStandings(@PathVariable Long tournamentId) {
 		log.info("Inside TournamentController :: getStandings() tournamentId : {}", tournamentId);
 		return ResponseEntity.ok(standingsService.getStandings(tournamentId));
+	}
+
+	@GetMapping("/{tournamentId}/leaderboard")
+	public ResponseEntity<ResponseBean> getLeaderboard(@PathVariable Long tournamentId) {
+		log.info("Inside TournamentController :: getLeaderboard() tournamentId : {}", tournamentId);
+		return ResponseEntity.ok(statsService.getTournamentLeaderboard(tournamentId));
 	}
 }

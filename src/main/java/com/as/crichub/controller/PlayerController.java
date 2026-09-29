@@ -3,6 +3,7 @@ package com.as.crichub.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import com.as.crichub.dto.PlayerUpdateReq;
 import com.as.crichub.response.ResponseBean;
 import com.as.crichub.security.CustomUserDetails;
 import com.as.crichub.service.PlayerService;
+import com.as.crichub.service.StatsService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PlayerController {
 
 	private final PlayerService playerService;
+	private final StatsService statsService;
 
-	public PlayerController(PlayerService playerService) {
+	public PlayerController(PlayerService playerService, StatsService statsService) {
 		this.playerService = playerService;
+		this.statsService = statsService;
 	}
 
 	/**
@@ -48,5 +52,14 @@ public class PlayerController {
 		log.info("Inside PlayerController :: updateMyProfile()");
 		ResponseBean response = playerService.updateMyProfile(principal.getUserId(), request);
 		return ResponseEntity.ok(response);
+	}
+
+	/**
+	 * GET /api/players/{playerId}/stats — a player's aggregated career stats.
+	 */
+	@GetMapping("/{playerId}/stats")
+	public ResponseEntity<ResponseBean> playerStats(@PathVariable Long playerId) {
+		log.info("Inside PlayerController :: playerStats() playerId : {}", playerId);
+		return ResponseEntity.ok(statsService.getPlayerStats(playerId));
 	}
 }

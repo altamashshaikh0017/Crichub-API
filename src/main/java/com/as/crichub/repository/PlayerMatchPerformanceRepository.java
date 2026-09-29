@@ -16,6 +16,9 @@ public interface PlayerMatchPerformanceRepository extends JpaRepository<PlayerMa
 	/** Removes every performance line for a match — used when replacing a scorecard. */
 	void deleteByMatchMatchId(Long matchId);
 
-	/** Every performance line for a player, for aggregating career stats later. */
+	/** Every performance line for a player, for aggregating career stats. */
 	List<PlayerMatchPerformance> findByPlayerPlayerId(Long playerId);
+
+	/** Every performance line across a tournament's matches, for leaderboards. */
+	List<PlayerMatchPerformance> findByMatchTournamentTournamentId(Long tournamentId);
 }
