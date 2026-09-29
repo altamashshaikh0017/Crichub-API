@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.as.crichub.dto.MatchReq;
 import com.as.crichub.dto.MatchResultReq;
+import com.as.crichub.dto.ScorecardReq;
 import com.as.crichub.response.ResponseBean;
 import com.as.crichub.service.MatchService;
+import com.as.crichub.service.ScorecardService;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MatchController {
 
 	private final MatchService matchService;
+	private final ScorecardService scorecardService;
 
-	public MatchController(MatchService matchService) {
+	public MatchController(MatchService matchService, ScorecardService scorecardService) {
 		this.matchService = matchService;
+		this.scorecardService = scorecardService;
 	}
 
 	@GetMapping
@@ -67,5 +71,18 @@ public class MatchController {
 	public ResponseEntity<ResponseBean> deleteMatch(@PathVariable Long matchId) {
 		log.info("Inside MatchController :: deleteMatch() matchId : {}", matchId);
 		return ResponseEntity.ok(matchService.deleteMatch(matchId));
+	}
+
+	@GetMapping("/{matchId}/scorecard")
+	public ResponseEntity<ResponseBean> getScorecard(@PathVariable Long matchId) {
+		log.info("Inside MatchController :: getScorecard() matchId : {}", matchId);
+		return ResponseEntity.ok(scorecardService.getScorecard(matchId));
+	}
+
+	@PutMapping("/{matchId}/scorecard")
+	public ResponseEntity<ResponseBean> saveScorecard(@PathVariable Long matchId,
+			@Valid @RequestBody ScorecardReq request) {
+		log.info("Inside MatchController :: saveScorecard() matchId : {}", matchId);
+		return ResponseEntity.ok(scorecardService.saveScorecard(matchId, request));
 	}
 }
