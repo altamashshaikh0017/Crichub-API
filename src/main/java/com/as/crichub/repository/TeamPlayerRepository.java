@@ -1,6 +1,7 @@
 package com.as.crichub.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,12 +17,15 @@ public interface TeamPlayerRepository extends JpaRepository<TeamPlayer, Long> {
 
 	List<TeamPlayer> findByPlayer(Player player);
 
-	List<TeamPlayer> findByTeamTeamId(Long teamId);
+	List<TeamPlayer> findByTeamTeamIdOrderByTeamPlayerIdAsc(Long teamId);
 
 	List<TeamPlayer> findByPlayerPlayerId(Long playerId);
 
 	boolean existsByTeamAndPlayer(Team team, Player player);
 
 	boolean existsByTeamTeamIdAndPlayerPlayerId(Long teamId, Long playerId);
+
+	/** A single roster entry, scoped to its team, so removals can't cross teams. */
+	Optional<TeamPlayer> findByTeamPlayerIdAndTeamTeamId(Long teamPlayerId, Long teamId);
 
 }
