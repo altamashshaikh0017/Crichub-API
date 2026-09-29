@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.as.crichub.dto.RegisterTeamReq;
 import com.as.crichub.dto.TournamentReq;
 import com.as.crichub.response.ResponseBean;
+import com.as.crichub.service.MatchService;
 import com.as.crichub.service.TournamentService;
 
 import jakarta.validation.Valid;
@@ -25,9 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class TournamentController {
 
 	private final TournamentService tournamentService;
+	private final MatchService matchService;
 
-	public TournamentController(TournamentService tournamentService) {
+	public TournamentController(TournamentService tournamentService, MatchService matchService) {
 		this.tournamentService = tournamentService;
+		this.matchService = matchService;
 	}
 
 	@GetMapping
@@ -82,5 +85,11 @@ public class TournamentController {
 		log.info("Inside TournamentController :: unregisterTeam() tournamentId : {} registrationId : {}",
 				tournamentId, registrationId);
 		return ResponseEntity.ok(tournamentService.unregisterTeam(tournamentId, registrationId));
+	}
+
+	@GetMapping("/{tournamentId}/matches")
+	public ResponseEntity<ResponseBean> getTournamentMatches(@PathVariable Long tournamentId) {
+		log.info("Inside TournamentController :: getTournamentMatches() tournamentId : {}", tournamentId);
+		return ResponseEntity.ok(matchService.getMatchesByTournament(tournamentId));
 	}
 }
